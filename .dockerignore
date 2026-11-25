@@ -1,0 +1,15 @@
+node_modules
+backend/node_modules
+frontend/node_modules
+backend/dist
+frontend/dist
+storage/downloads/*
+storage/uploads/*
+storage/temp/*
+storage/*.db
+storage/*.db-journal
+!storage/downloads/.gitkeep
+!storage/uploads/.gitkeep
+!storage/temp/.gitkeep
+backend/.env
+.git

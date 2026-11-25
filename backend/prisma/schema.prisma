@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  sourceUrl   String?
+  title       String
+  thumbnail   String?
+  duration    Float?
+  sourceType  String
+  provider    String   @default("direct")
+  mimeType    String?
+  fileName    String?
+  fileSize    Int?
+  width       Int?
+  height      Int?
+  hasAudio    Boolean  @default(true)
+  hasVideo    Boolean  @default(false)
+  channel     String?
+  authorUrl   String?
+  storedPath  String?
+  createdAt   DateTime @default(now())
+
+  jobs Job[]
+
+  @@index([createdAt])
+}
+
+model Job {
+  id           String    @id @default(cuid())
+  mediaId      String
+  media        Media     @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  outputFormat String
+  quality      String
+  status       String    @default("queued")
+  progress     Float     @default(0)
+  outputPath   String?
+  fileName     String?
+  fileSize     Int?
+  errorMessage String?
+  speed        Float?
+  etaSeconds   Float?
+  attempts     Int       @default(0)
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([status, createdAt])
+  @@index([mediaId])
+}
+
+model History {
+  id        String   @id @default(cuid())
+  fileName  String
+  format    String
+  fileSize  Int?
+  jobId     String?  @unique
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
